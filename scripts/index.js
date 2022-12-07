@@ -49,6 +49,9 @@ const initializeOnboarding = () => {
     } else {
         connectButton.innerText = 'Connect Wallet';
         sendTransactionPanel.style.display = "none";
+        activeAccount = undefined;
+        accounts = undefined;
+        activeAccountId.innerText = null;
         connectButton.onclick = async () => {
             await window.ethereum.request({
                 method: 'eth_requestAccounts',

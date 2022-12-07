@@ -14,7 +14,7 @@ const initialize = async () => {
     if (ethereum.isConnected && (accounts.length === 0 || accounts.length > 0 && activeAccount !== accounts[0])) {
         await loadActiveAccount()
     }
-    if (activeAccount) {
+    if (accounts.length > 0 && activeAccount === accounts[0]) {
         sendTransactionPanel.style.display = "block";
     } else {
         sendTransactionPanel.style.display = "none";

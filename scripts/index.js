@@ -14,12 +14,13 @@ const initialize = async () => {
     if (ethereum.isConnected && (accounts.length === 0 || accounts.length > 0 && activeAccount !== accounts[0])) {
         await loadActiveAccount()
     }
-    await initializeWorkAdventureApi()
     if (activeAccount) {
         sendTransactionPanel.style.display = "block";
     } else {
         sendTransactionPanel.style.display = "none";
     }
+    await initializeWorkAdventureApi()
+
 }
 
 const loadActiveAccount = async () => {

@@ -4,7 +4,7 @@ const connectButton = document.getElementById('connectButton')
 const activeAccountId = document.getElementById('activeAccount')
 const senderId = document.getElementById('senderId')
 const receiverId = document.getElementById('receiverId')
-const sendTransactionButton = document.getElementById('sendTransaction')
+const ethValueInput = document.getElementById('ethValueInput')
 let accounts = [];
 let activeAccount;
 
@@ -58,28 +58,29 @@ const initializeWorkAdventureApi = async () => {
             WA.onInit().then(resolve, reject)
             setTimeout(reject, 5000)
         })
-        listenToMessages()
         console.log("WA Loaded")
     } catch (err) {
         console.log("Cannot load Work Adventure API")
     }
 }
 
-const listenToMessages = () => {
-    WA.chat.onChatMessage((message => {
-        console.log('New Message: ', message);
-    }));
-}
-
 const sendTransaction = () => {
-    console.log("Send transaction clicked")
-    const value = ethers.utils.parseEther("0.11")
+    const ethAmount = ethValueInput.value;
+    const receiverAddress = receiverId.value;
+    if (!ethers.utils.isAddress(receiverAddress)) {
+        alert("Invalid receiver address")
+        return
+    }
+    if (isNaN(parseFloat(ethAmount))) {
+        alert("Invalid eth amount provided")
+    }
+    const amountInWei = ethers.utils.parseEther(ethAmount)
 
     const params = [
         {
             from: activeAccount,
-            to: '0xd46e8dd67c5d32be8058bb8eb970870f07244567',
-            value: value.toHexString(),
+            to: receiverId.value,
+            value: amountInWei.toHexString(),
         }
     ];
     return ethereum.request({

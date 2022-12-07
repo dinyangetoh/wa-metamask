@@ -23,6 +23,8 @@ const loadActiveAccount = async ()=>{
         activeAccount = activeAccounts[0];
         activeAccountId.innerText = `WalletID: ${activeAccount}`;
         connectButton.innerText = 'Wallet Connected';
+    }else{
+        initializeOnboarding()
     }
 }
 

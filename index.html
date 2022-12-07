@@ -2,18 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <title>WA Metamask Plugin</title>
 </head>
-<body>
-<h4>WA Metamask</h4>
+<body class="bg-gray-300">
+    <div class="container mx-auto">
+        <div class="flex flex-col justify-center">
+<!--            <h4 class="text-xl my-5 text-center">Metamask Plugin for Work Adventure Maps</h4>-->
+
+            <div class="bg-yellow-200 p-4 text-center my-4">
+                <span id="infoText">Metamask Plugin installed, connect wallet to continue</span>
+            </div>
+            <div class="text-center">
+                <button id="connectButton" type="button" class="text-gray-100 text-2xl bg-blue-600 hover:bg-blue-500 rounded py-2 px-3">Loading...</button>
+            </div>
+        </div>
+    </div>
 
 <script>
-  const { ethereum } = window;
-  if(ethereum){
-    console.log("Metamask is installed")
-  }else{
-    console.error("Please install metamask")
-  }
+    const initialize = ()=> {
+        const connectButton = document.getElementById('connectButton')
+        const {ethereum} = window;
+        if (ethereum) {
+            console.log("Metamask is installed")
+            connectButton.innerText = 'Connect Wallet'
+        } else {
+            connectButton.innerText = 'Install Metamask Plugin'
+            console.error("Please install metamask")
+        }
+    }
+
+    window.addEventListener('load',initialize)
 </script>
 
 </body>

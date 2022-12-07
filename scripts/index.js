@@ -2,6 +2,8 @@ console.log("External Script Loaded")
 const {ethereum} = window;
 const connectButton = document.getElementById('connectButton')
 const activeAccountId = document.getElementById('activeAccount')
+const senderId = document.getElementById('senderId')
+const receiverId = document.getElementById('receiverId')
 const sendTransactionButton = document.getElementById('sendTransaction')
 let accounts = [];
 let activeAccount;
@@ -12,6 +14,7 @@ const initialize = async () => {
         console.log("Already connected")
         await loadActiveAccount()
     }
+    await initializeWorkAdventureApi()
 }
 
 const loadActiveAccount = async () => {
@@ -20,6 +23,7 @@ const loadActiveAccount = async () => {
     if (activeAccounts.length > 0) {
         activeAccount = activeAccounts[0];
         activeAccountId.innerText = `WalletID: ${activeAccount}`;
+        senderId.innerText = activeAccounts;
         connectButton.innerText = 'Wallet Connected';
     } else {
         initializeOnboarding()
@@ -27,6 +31,8 @@ const loadActiveAccount = async () => {
 }
 
 const initializeOnboarding = () => {
+    console.log("initializing onboarding")
+    console.log("initializing onboarding")
     const onboarding = new MetaMaskOnboarding();
     if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
         connectButton.innerText = 'Click here to install MetaMask!';
@@ -49,6 +55,19 @@ const initializeOnboarding = () => {
         };
     }
 };
+
+const initializeWorkAdventureApi = async () => {
+    console.log("Initializing WA")
+    try {
+        console.log("loading WA")
+        await WA.onInit();
+        console.log("Work Adventure API loaded")
+        WA.chat.sendChatMessage('Hello world', 'Mr Robot');
+    } catch (err) {
+        console.error("Error loading WA API", err)
+        throw err
+    }
+}
 
 const sendTransaction = () => {
     console.log("Send transaction clicked")

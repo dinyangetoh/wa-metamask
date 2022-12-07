@@ -14,11 +14,7 @@ const initialize = async () => {
     if (ethereum.isConnected && (accounts.length === 0 || accounts.length > 0 && activeAccount !== accounts[0])) {
         await loadActiveAccount()
     }
-    if (accounts.length > 0 && activeAccount === accounts[0]) {
-        sendTransactionPanel.style.display = "block";
-    } else {
-        sendTransactionPanel.style.display = "none";
-    }
+
     await initializeWorkAdventureApi()
 
 }
@@ -30,6 +26,7 @@ const loadActiveAccount = async () => {
         activeAccountId.innerText = `WalletID: ${activeAccount}`;
         senderId.innerText = activeAccounts;
         connectButton.innerText = 'Wallet Connected';
+        sendTransactionPanel.style.display = "block";
     } else {
         initializeOnboarding()
     }
@@ -47,9 +44,11 @@ const initializeOnboarding = () => {
     } else if (accounts && accounts.length > 0) {
         connectButton.innerText = 'Wallet Connected';
         connectButton.disabled = true;
+        sendTransactionPanel.style.display = "block";
         onboarding.stopOnboarding();
     } else {
         connectButton.innerText = 'Connect Wallet';
+        sendTransactionPanel.style.display = "none";
         connectButton.onclick = async () => {
             await window.ethereum.request({
                 method: 'eth_requestAccounts',

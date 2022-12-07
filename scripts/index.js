@@ -5,6 +5,7 @@ const activeAccountId = document.getElementById('activeAccount')
 const senderId = document.getElementById('senderId')
 const receiverId = document.getElementById('receiverId')
 const ethValueInput = document.getElementById('ethValueInput')
+const sendTransactionPanel = document.getElementById('sendTransactionPanel')
 let accounts = [];
 let activeAccount;
 
@@ -14,6 +15,11 @@ const initialize = async () => {
         await loadActiveAccount()
     }
     await initializeWorkAdventureApi()
+    if (activeAccount) {
+        sendTransactionPanel.style.display = "block";
+    } else {
+        sendTransactionPanel.style.display = "none";
+    }
 }
 
 const loadActiveAccount = async () => {

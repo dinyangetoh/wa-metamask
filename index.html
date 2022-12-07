@@ -4,21 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-
     <title>WA Metamask Plugin</title>
+    <script src="https://play.workadventu.re/iframe_api.js"></script>
     <script src="scripts/external/metamask-onboarding.bundle.js"></script>
+    <script src="scripts/external/web3.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+            type="application/javascript"></script>
 </head>
 <body class="bg-gray-300">
     <div class="container mx-auto">
         <div class="flex flex-col justify-center">
-<!--            <h4 class="text-xl my-5 text-center">Metamask Plugin for Work Adventure Maps</h4>-->
-
             <div class="bg-yellow-200 p-4 text-center my-4">
                 <span id="infoText">Metamask Plugin installed, connect wallet to continue</span>
                 <h4 id="activeAccount" class="text-xl my-5 text-center"></h4>
             </div>
             <div class="text-center">
                 <button id="connectButton" type="button" class="text-gray-100 text-2xl bg-blue-600 hover:bg-blue-500 rounded py-2 px-3">Loading...</button>
+            </div>
+            <div class="bg-gray-50 p-6">
+                <button onclick="sendTransaction()" id="sendTransaction" class="text-gray-100 text-2xl bg-blue-600 hover:bg-blue-500 rounded py-2 px-3"> Send Transaction</button>
             </div>
         </div>
     </div>

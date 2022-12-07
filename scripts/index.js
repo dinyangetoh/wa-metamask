@@ -2,17 +2,14 @@ console.log("External Script Loaded")
 const { ethereum } = window;
 const connectButton = document.getElementById('connectButton')
 const activeAccountId = document.getElementById('activeAccount')
-let accounts;
+let accounts=[];
 let activeAccount;
 
 const initialize = async ()=> {
-    if(ethereum.isConnected){
+    initializeOnboarding();
+    if(ethereum.isConnected && (accounts.length===0 || accounts.length>0 && activeAccount !== accounts[0])){
         console.log("Already connected")
         await loadActiveAccount()
-    }else {
-        console.log("Ethereum not connected")
-        activeAccountId.innerText = null;
-        initializeOnboarding();
     }
 }
 
@@ -53,10 +50,10 @@ const initializeOnboarding = () => {
 };
 
 if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-    window.ethereum.on('accountsChanged', (newAccounts) => {
+    window.ethereum.on('accountsChanged', async (newAccounts) => {
         accounts = newAccounts;
         initializeOnboarding();
-        loadActiveAccount()
+        await loadActiveAccount()
     });
 }
 

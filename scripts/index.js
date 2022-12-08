@@ -1,11 +1,17 @@
 console.log("External Script Loaded")
 const {ethereum} = window;
+
+// Define DOM element params
 const connectButton = document.getElementById('connectButton')
+const errorText = document.getElementById('errorText')
 const activeAccountId = document.getElementById('activeAccount')
 const senderId = document.getElementById('senderId')
 const receiverId = document.getElementById('receiverId')
 const ethValueInput = document.getElementById('ethValueInput')
 const sendTransactionPanel = document.getElementById('sendTransactionPanel')
+const sendTransactionButton = document.getElementById('sendTransaction')
+const transactionErrorText = document.getElementById('transactionErrorText')
+
 let accounts = [];
 let activeAccount;
 
@@ -14,9 +20,7 @@ const initialize = async () => {
     if (ethereum.isConnected && (accounts.length === 0 || accounts.length > 0 && activeAccount !== accounts[0])) {
         await loadActiveAccount()
     }
-
     await initializeWorkAdventureApi()
-
 }
 
 const loadActiveAccount = async () => {
@@ -50,7 +54,7 @@ const initializeOnboarding = () => {
         connectButton.innerText = 'Connect Wallet';
         sendTransactionPanel.style.display = "none";
         activeAccount = undefined;
-        accounts = undefined;
+        accounts = [];
         activeAccountId.innerText = null;
         connectButton.onclick = async () => {
             await window.ethereum.request({
@@ -62,6 +66,7 @@ const initializeOnboarding = () => {
 
 const initializeWorkAdventureApi = async () => {
     console.log("Initializing WA")
+    errorText.innerText = null;
     try {
         await new Promise((resolve, reject) => {
             WA.onInit().then(resolve, reject)
@@ -70,33 +75,53 @@ const initializeWorkAdventureApi = async () => {
         console.log("WA Loaded")
     } catch (err) {
         console.log("Cannot load Work Adventure API")
+        errorText.innerText = "Error loading Work Adventure API";
     }
 }
 
-const sendTransaction = () => {
+const sendTransaction = async () => {
+    resetTransactionError()
     const ethAmount = ethValueInput.value;
     const receiverAddress = receiverId.value;
     if (!ethers.utils.isAddress(receiverAddress)) {
-        alert("Invalid receiver address")
+        displayTransactionError("Invalid receiver address")
         return
     }
     if (isNaN(parseFloat(ethAmount))) {
-        alert("Invalid eth amount provided")
+        displayTransactionError("Invalid eth amount provided")
+        return
     }
     const amountInWei = ethers.utils.parseEther(ethAmount)
 
-    const params = [
-        {
-            from: activeAccount,
-            to: receiverId.value,
-            value: amountInWei.toHexString(),
-        }
-    ];
-    return ethereum.request({
-        method: 'eth_sendTransaction',
-        params,
-    })
+    try {
+        sendTransactionButton.disabled = true;
+        sendTransactionButton.innerText = "Processing Transaction";
+        const params = [
+            {
+                from: activeAccount,
+                to: receiverId.value,
+                value: amountInWei.toHexString(),
+            }
+        ];
+        await ethereum.request({
+            method: 'eth_sendTransaction',
+            params,
+        })
+    } catch (err) {
+        console.error("Error sending transaction", err)
+        displayTransactionError("Error sending transaction")
+    } finally {
+        ethValueInput.value = null;
+        receiverId.value = null;
+        sendTransactionButton.disabled = false;
+        sendTransactionButton.innerText = "Send Transaction";
+    }
 }
+
+const displayTransactionError = (message) => {
+    transactionErrorText.innerText = message;
+}
+const resetTransactionError = () => transactionErrorText.innerText = null;
 
 if (MetaMaskOnboarding.isMetaMaskInstalled()) {
     window.ethereum.on('accountsChanged', async (newAccounts) => {
